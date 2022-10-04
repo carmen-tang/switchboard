@@ -15,8 +15,8 @@ import './App.css';
 const columns = [
   { id: 'First Name', label: 'First Name', minWidth: 150 },
   { id: 'Last Name', label: 'Last Name', minWidth: 150 },
-  { id: 'Contribution Amount', label: 'Contribution Amount', minWidth: 150 },
   { id: 'Refcode', label: 'Refcode', minWidth: 150 },
+  { id: 'Contribution Amount', label: 'Contribution Amount', minWidth: 150 },
 ];
 
 function App() {
@@ -83,10 +83,10 @@ function App() {
                     {row.donor_lastname}
                   </TableCell>
                   <TableCell>
-                    {row.amount}
+                    {row.refcode}
                   </TableCell>
                   <TableCell>
-                    {row.refcode}
+                    ${row.amount}
                   </TableCell>
                 </TableRow>
               );
