@@ -9,6 +9,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import SearchBar from "material-ui-search-bar";
 
 import './App.css';
 
@@ -21,7 +22,7 @@ const columns = [
 
 function App() {
   const [data, setData] = useState([]);
-  console.log(data);
+  // console.log(data);
 
   const getData = () => {
     axios.get('switchboard.json')
@@ -50,6 +51,22 @@ function App() {
     setPage(0);
   };
 
+  const [rows, setRows] = useState([]);
+  const [searched, setSearched] = useState("");
+
+  const requestSearch = (searchedVal) => {
+    const filteredRows = data.filter((row) => {
+      return row.refcode.toLowerCase().includes(searchedVal.toLowerCase());
+    });
+    setRows(filteredRows);
+    console.log(filteredRows);
+  };
+
+  const cancelSearch = () => {
+    setSearched("");
+    requestSearch(searched);
+  };
+
   return (
     <div className="App">
       {/* <div>
@@ -59,6 +76,11 @@ function App() {
         }
       </div> */}
       <Paper>
+      <SearchBar
+          value={searched}
+          onChange={(searchVal) => requestSearch(searchVal)}
+          onCancelSearch={() => cancelSearch()}
+        />
       <TableContainer>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
