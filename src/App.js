@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import dayjs from 'dayjs';
 
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
@@ -19,14 +20,16 @@ const columns = [
   { id: 'First Name', label: 'First Name', minWidth: 150 },
   { id: 'Last Name', label: 'Last Name', minWidth: 150 },
   { id: 'Refcode', label: 'Refcode', minWidth: 150 },
+  { id: 'Date', label: 'Date', minWidth: 150 },
   { id: 'Contribution Amount', label: 'Contribution Amount', minWidth: 150 },
 ];
 
 function App() {
+  // initial get data
   const [data, setData] = useState([]);
-  // console.log(data);
 
   const getData = () => {
+    // use axios to get data from json file
     axios.get('switchboard.json')
     .then(res => {
       setData(res.data);
@@ -38,6 +41,7 @@ function App() {
     getData();
   },[])
 
+  // pagination
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -50,6 +54,7 @@ function App() {
     setPage(0);
   };
 
+  // filtered rows
   const [rows, setRows] = useState(data);
 
   // refcodes array
@@ -80,6 +85,31 @@ function App() {
     setRows(data);
   }
 
+  // total raised
+  const [raised, setRaised] = useState(0);
+  const [showAmountTotals, setShowAmountTotals] = useState(false);
+
+  const showTotals = () => {
+    setShowAmountTotals(true);
+  }
+
+  const getRaisedMoney = () => {
+    const raisedMoney = data.map((item) => item.amount);
+    const sumRaisedMoney = raisedMoney.reduce((a, b) => a + b, 0).toFixed(2);
+    let nf = new Intl.NumberFormat('en-US');
+    const formatMoney = nf.format(sumRaisedMoney);
+    setRaised(formatMoney);
+  }
+
+  useEffect(() => {
+    getRaisedMoney();
+  },[showAmountTotals])
+
+  // date
+  // const day = dayjs('2021-06-01 08:22:45+00').format('MM/DD/YYYY');
+  // const daysub = dayjs(day).subtract(7, 'day').format('MM/DD/YYYY');
+  // console.log(daysub);
+
   return (
     <div className="App">
       <Paper className="main-body">
@@ -96,7 +126,7 @@ function App() {
         inputValue=""
       />
       <Button onClick={clearSearch}>Clear Search</Button>
-      
+
       <TableContainer>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -124,6 +154,9 @@ function App() {
                     {row.refcode}
                   </TableCell>
                   <TableCell>
+                    {dayjs(row.paid_at).format('MM/DD/YYYY')}
+                  </TableCell>
+                  <TableCell>
                     ${row.amount}
                   </TableCell>
                 </TableRow>
@@ -141,6 +174,13 @@ function App() {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+
+      <Button onClick={showTotals}>Show Amount Raised</Button>
+      {showAmountTotals &&
+        <div className="amount-raised">
+          Total Raised: ${raised}
+        </div>
+      }
     </Paper>
     </div>
   );
