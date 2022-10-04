@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -10,6 +11,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import SearchBar from "material-ui-search-bar";
+import Autocomplete from '@mui/material/Autocomplete';
 
 import './App.css';
 
@@ -64,9 +66,28 @@ function App() {
   };
 
   const cancelSearch = () => {
-    setSearched("");
+    setSelectedOption("");
     requestSearch(searched);
   };
+
+  // refcodes array
+  const refcodesArray = data.map((item) => item.refcode);
+  let uniqueRefcodes = [...new Set(refcodesArray)];
+
+  //
+
+  const [selectedOption, setSelectedOption] = useState("");
+
+  const handleAutoChange = (event, value) => setSelectedOption(value);
+  console.log(selectedOption);
+
+  useEffect(() => {
+    const filteredRows = data.filter((row) => {
+      return row.refcode.toLowerCase().includes(selectedOption.toLowerCase());
+    });
+    setRows(filteredRows);
+    console.log(filteredRows);
+  },[selectedOption])
 
   return (
     <div className="App">
@@ -77,11 +98,20 @@ function App() {
         }
       </div> */}
       <Paper>
-      <SearchBar
+      {/* <SearchBar
           value={searched}
           onChange={(searchVal) => requestSearch(searchVal)}
           onCancelSearch={() => cancelSearch()}
-        />
+        /> */}
+
+      <Autocomplete
+        id="refcodes-autocomplete"
+        freeSolo
+        options={uniqueRefcodes}
+        renderInput={(params) => <TextField {...params} label="Search By Refcode" />}
+        onChange={handleAutoChange}
+        // onClose={cancelSearch}
+      />
       <TableContainer>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
