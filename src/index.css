@@ -11,3 +11,32 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.App {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* height: 100vh; */
+  background-color: #4c51bf;
+}
+
+.main-body {
+  width: 100%;
+  min-width: 600px;
+  max-width: 900px;
+  padding: 1.5em;
+  margin: 4em 1.5em;
+}
+
+h1 {
+  margin: 0 0 0.875em;
+  padding: 0;
+}
+
+.MuiAutocomplete-root {
+  padding: 0 0 1em 0;
+}
+
+.MuiButton-root {
+  color: #4c51bf !important;
+}

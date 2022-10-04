@@ -29,9 +29,6 @@ function App() {
   const getData = () => {
     axios.get('switchboard.json')
     .then(res => {
-      // console.log(res);
-      // console.log(res.data);
-      console.log('here');
       setData(res.data);
       setRows(res.data);
     })
@@ -45,7 +42,6 @@ function App() {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const handleChangePage = (event, newPage) => {
-    console.log('hereee');
     setPage(newPage);
   };
 
@@ -62,38 +58,34 @@ function App() {
 
   // search
   const [selectedOption, setSelectedOption] = useState("");
-  const [searched, setSearched] = useState("");
 
   const requestSearch = (searchedVal) => {
     const filteredRows = data.filter((row) => {
       return row.refcode.toLowerCase().includes(searchedVal.toLowerCase());
     });
     setRows(filteredRows);
-    // console.log(filteredRows);
   };
-
-  // const cancelSearch = () => {
-  //   setSelectedOption("");
-  //   requestSearch(searched);
-  // };
 
   const handleAutoChange = (event, value) => {
     console.log(selectedOption);
     setSelectedOption(value);
   }
 
+  useEffect(() => {
+    requestSearch(selectedOption);
+  },[selectedOption])
+
+  // clear search
   const clearSearch = () => {
     setRows(data);
   }
 
-  useEffect(() => {
-    requestSearch(selectedOption);
-    console.log(selectedOption);
-  },[selectedOption])
-
   return (
     <div className="App">
-      <Paper>
+      <Paper className="main-body">
+
+      <h1>Fundraising Dashboard</h1>
+
       <Autocomplete
         id="refcodes-autocomplete"
         freeSolo
@@ -104,6 +96,7 @@ function App() {
         inputValue=""
       />
       <Button onClick={clearSearch}>Clear Search</Button>
+      
       <TableContainer>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
