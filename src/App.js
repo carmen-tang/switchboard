@@ -10,7 +10,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import SearchBar from "material-ui-search-bar";
+import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
 
 import './App.css';
@@ -55,6 +55,13 @@ function App() {
   };
 
   const [rows, setRows] = useState(data);
+
+  // refcodes array
+  const refcodesArray = data.map((item) => item.refcode);
+  let uniqueRefcodes = [...new Set(refcodesArray)];
+
+  // search
+  const [selectedOption, setSelectedOption] = useState("");
   const [searched, setSearched] = useState("");
 
   const requestSearch = (searchedVal) => {
@@ -62,56 +69,41 @@ function App() {
       return row.refcode.toLowerCase().includes(searchedVal.toLowerCase());
     });
     setRows(filteredRows);
-    console.log(filteredRows);
+    // console.log(filteredRows);
   };
 
-  const cancelSearch = () => {
-    setSelectedOption("");
-    requestSearch(searched);
-  };
+  // const cancelSearch = () => {
+  //   setSelectedOption("");
+  //   requestSearch(searched);
+  // };
 
-  // refcodes array
-  const refcodesArray = data.map((item) => item.refcode);
-  let uniqueRefcodes = [...new Set(refcodesArray)];
+  const handleAutoChange = (event, value) => {
+    console.log(selectedOption);
+    setSelectedOption(value);
+  }
 
-  //
-
-  const [selectedOption, setSelectedOption] = useState("");
-
-  const handleAutoChange = (event, value) => setSelectedOption(value);
-  console.log(selectedOption);
+  const clearSearch = () => {
+    setRows(data);
+  }
 
   useEffect(() => {
-    const filteredRows = data.filter((row) => {
-      return row.refcode.toLowerCase().includes(selectedOption.toLowerCase());
-    });
-    setRows(filteredRows);
-    console.log(filteredRows);
+    requestSearch(selectedOption);
+    console.log(selectedOption);
   },[selectedOption])
 
   return (
     <div className="App">
-      {/* <div>
-        {data.slice(0, 10).map(i => {
-          return <div key={i.id}>{i.donor_firstname} {i.donor_lastname}</div>
-        })
-        }
-      </div> */}
       <Paper>
-      {/* <SearchBar
-          value={searched}
-          onChange={(searchVal) => requestSearch(searchVal)}
-          onCancelSearch={() => cancelSearch()}
-        /> */}
-
       <Autocomplete
         id="refcodes-autocomplete"
         freeSolo
         options={uniqueRefcodes}
         renderInput={(params) => <TextField {...params} label="Search By Refcode" />}
         onChange={handleAutoChange}
-        // onClose={cancelSearch}
+        disableClearable
+        inputValue=""
       />
+      <Button onClick={clearSearch}>Clear Search</Button>
       <TableContainer>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
