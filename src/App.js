@@ -31,6 +31,7 @@ function App() {
       // console.log(res.data);
       console.log('here');
       setData(res.data);
+      setRows(res.data);
     })
   }
 
@@ -51,7 +52,7 @@ function App() {
     setPage(0);
   };
 
-  const [rows, setRows] = useState([]);
+  const [rows, setRows] = useState(data);
   const [searched, setSearched] = useState("");
 
   const requestSearch = (searchedVal) => {
@@ -95,7 +96,7 @@ function App() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                   <TableCell>
