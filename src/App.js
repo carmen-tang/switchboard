@@ -123,7 +123,6 @@ function App() {
         renderInput={(params) => <TextField {...params} label="Search By Refcode" />}
         onChange={handleAutoChange}
         disableClearable
-        inputValue=""
       />
       <Button onClick={clearSearch}>Clear Search</Button>
 
